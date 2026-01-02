@@ -973,10 +973,10 @@ void menuHandleInputMain()
             char *gameID = support->itemGetStartup(support, selected_item->item->id);
 
             if (gameID) {
-                // Usamos LOG en lugar de printf para evitar errores de compilacion
+                // 3. Enviamos el ID al ESP32 (Formato: !!!ESP32_START:CODIGO###)
                 LOG("\n\n!!!ESP32_START:%s###\n\n", gameID);
 
-                // Esperamos 0.1s para asegurar que el mensaje salga
+                // 4. Esperamos 0.1s para asegurar que el mensaje salga por el cable
                 delay(100);
             }
         }
