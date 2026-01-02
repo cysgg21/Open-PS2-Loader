@@ -965,7 +965,28 @@ void menuHandleInputMain()
     } else if (getKey(KEY_DOWN)) {
         menuNextV();
     } else if (getKeyOn(KEY_CROSS)) {
+        
+        // --- INICIO CODIGO PROYECTO ESP32 ---
+        // 1. Accedemos a los datos del juego seleccionado
+        item_list_t *support = selected_item->item->userdata;
+
+        // 2. Si el objeto tiene datos y funcion de arranque, obtenemos el ID
+        if (support && support->itemGetStartup) {
+             char *gameID = support->itemGetStartup(support, selected_item->item->id);
+
+             if (gameID) {
+                 // 3. Enviamos el ID al ESP32 (Formato: !!!ESP32_START:CODIGO###)
+                 printf("\n\n!!!ESP32_START:%s###\n\n", gameID);
+                 
+                 // 4. Esperamos 0.1s para asegurar que el mensaje salga por el cable
+                 delay(100); 
+             }
+        }
+        // --- FIN CODIGO PROYECTO ESP32 ---
+
+        // Esta es la línea original que ya tenías (ejecuta la acción)
         selected_item->item->execCross(selected_item->item);
+
     } else if (getKeyOn(KEY_TRIANGLE)) {
         selected_item->item->execTriangle(selected_item->item);
     } else if (getKeyOn(KEY_CIRCLE)) {
