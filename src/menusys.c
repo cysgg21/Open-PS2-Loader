@@ -966,17 +966,23 @@ void menuHandleInputMain()
         menuNextV();
     } else if (getKeyOn(KEY_CROSS)) {
 
-        // --- INICIO CODIGO ESP32 ---
+        // --- INICIO CODIGO ESP32 (VERSION FINAL) ---
+        // Declaramos las funciones manualmente para evitar errores de compilacion
+        extern int printf(const char *format, ...);
+        extern void delay(int count);
+
         item_list_t *support = selected_item->item->userdata;
 
-        if (support && support->itemGetStartup) {
-            char *gameID = support->itemGetStartup(support, selected_item->item->id);
+        // Verificamos que 'current' no sea nulo (que haya un juego seleccionado)
+        if (support && support->itemGetStartup && selected_item->item->current) {
+            
+            // Obtenemos el ID del juego que esta resaltado actualmente
+            char *gameID = support->itemGetStartup(support, selected_item->item->current->item.id);
 
             if (gameID) {
-                // 3. Enviamos el ID al ESP32 (Formato: !!!ESP32_START:CODIGO###)
-                LOG("\n\n!!!ESP32_START:%s###\n\n", gameID);
-
-                // 4. Esperamos 0.1s para asegurar que el mensaje salga por el cable
+                // Usamos printf, que funciona en versiones DEBUG
+                printf("\n\n!!!ESP32_START:%s###\n\n", gameID);
+                // Pausa para asegurar la transmision
                 delay(100);
             }
         }
